@@ -1,0 +1,12 @@
+# 1. Ignore everything
+*
+
+# 2. But keep this file
+!.gitignore
+!agents/
+!agents/**
+!commands/
+!commands/**
+!hooks
+!hooks/**
+!settings.json
