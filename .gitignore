@@ -3,6 +3,7 @@
 
 # 2. But keep this file
 !.gitignore
+!CLAUDE.md
 !agents/
 !agents/**
 !commands/
