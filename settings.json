@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "MAX_THINKING_TOKENS": "31999",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "opus"
+  },
+  "permissions": {
+    "allow": [
+      "*",
+      "Bash(uv run pytest python/cffex/test/test_dvp.py::TestBatchTv::test_batch_tv_rank_3 -v)",
+      "Bash(uv run pytest:*)",
+      "Bash(git add:*)",
+      "Bash(git restore:*)",
+      "Bash(git commit:*)",
+      "Bash(python:*)",
+      "Bash(timeout 10 uv run pytest python/cffex/test/test_check_first_snap.py::TestCheckFirstSnap::test_check_first_snap_nonexistent_file -v)",
+      "Bash(timeout 15 uv run pytest:*)",
+      "Bash(git log:*)",
+      "Bash(uv run:*)",
+      "Bash(timeout 60 uv run pytest:*)",
+      "Bash(python3 -c \"\nimport numpy as np\n\n# Parameters from user''s example\nback_rank = [1, 2]  # 2 values\nseries = [0]  # 1 value\nmpos = [10]  # 1 value\nmorder = [10]  # 1 value\ntv_ratio = np.linspace(0.0, 0.5, 5)  # 5 values\nofs_ratio = np.linspace(0.2, 1.5, 15)  # 15 values\nfee_ratio = np.linspace(0.9, 1.1, 3)  # 3 values\nentry_ratio = np.linspace(0.5, 0.7, 5)  # 5 values\nadj_ratio = np.linspace(0.8, 1.2, 10)  # 10 values\n\n# Defaults\ndata_skip_len = [1]\ndata_init_len = [20]\ndata_median_len = [3]\nhalf_life_spread = [150.0, 300.0, 600.0]  # 3 values\nhalf_life_offset = [150.0, 300.0, 600.0]  # 3 values\nhrate = [0.3]\ntrade_init_skip = [22]\ntrade_end_skip = [20]\n\nnum_dates = 1\n\ndata_combos = len(data_skip_len) * len(data_init_len) * len(data_median_len) * len(half_life_spread) * len(half_life_offset)\ntrade_combos = len(mpos) * len(morder) * len(tv_ratio) * len(ofs_ratio) * len(fee_ratio) * len(entry_ratio) * len(adj_ratio) * len(hrate) * len(trade_init_skip) * len(trade_end_skip)\n\ncombos_per_date_per_series_backrank = data_combos * trade_combos\ncombos_per_date = combos_per_date_per_series_backrank * len(series) * len(back_rank)\ntotal_combos = combos_per_date * num_dates\n\nprint(f''Data param combos: {data_combos}'')\nprint(f''Trade param combos: {trade_combos}'')\nprint(f''Combos per (date, series, back_rank): {combos_per_date_per_series_backrank}'')\nprint(f''Combos per date (all series×back_rank): {combos_per_date}'')\nprint(f''Total combos (all dates): {total_combos}'')\nprint(f'''')\nprint(f''Calculation breakdown:'')\nprint(f''  {data_combos} = {len(data_skip_len)}×{len(data_init_len)}×{len(data_median_len)}×{len(half_life_spread)}×{len(half_life_offset)}'')\nprint(f''  {trade_combos} = {len(mpos)}×{len(morder)}×{len(tv_ratio)}×{len(ofs_ratio)}×{len(fee_ratio)}×{len(entry_ratio)}×{len(adj_ratio)}×{len(hrate)}×{len(trade_init_skip)}×{len(trade_end_skip)}'')\nprint(f''  {total_combos} = {num_dates} dates × {len(series)} series × {len(back_rank)} back_ranks × {data_combos} data × {trade_combos} trade'')\n\")",
+      "Bash(python3 -c \"\nimport numpy as np\n\n# Parameters from the request\nback_rank = [1, 2]  # 2 values\nseries = [0]  # 1 value\nmpos = [3, 5, 10]  # 3 values\nmorder = list(range(1, 21, 2))  # [1, 3, 5, 7, 9, 11, 13, 15, 17, 19] = 10 values\ntv_ratio = np.linspace(0.0, 0.5, 4)  # 4 values\nofs_ratio = np.linspace(0.2, 1.5, 8)  # 8 values\nfee_ratio = np.linspace(0.9, 1.1, 3)  # 3 values\nentry_ratio = np.linspace(0.5, 0.7, 3)  # 3 values\nadj_ratio = np.linspace(0.8, 1.2, 5)  # 5 values\n\n# Defaults\ndata_skip_len = [1]\ndata_init_len = [20]\ndata_median_len = [3]\nhalf_life_spread = [150.0, 300.0, 600.0]  # 3 values\nhalf_life_offset = [150.0, 300.0, 600.0]  # 3 values\nhrate = [0.3]\ntrade_init_skip = [22]\ntrade_end_skip = [20]\n\nnum_dates = 1\n\n# Calculate valid mpos/morder combinations (filtering morder > 2*mpos)\nvalid_mpos_morder = []\nfor mp in mpos:\n    for mo in morder:\n        if mo <= 2 * mp:\n            valid_mpos_morder.append((mp, mo))\n\ndata_combos = len(data_skip_len) * len(data_init_len) * len(data_median_len) * len(half_life_spread) * len(half_life_offset)\ntrade_combos_unfiltered = len(mpos) * len(morder) * len(tv_ratio) * len(ofs_ratio) * len(fee_ratio) * len(entry_ratio) * len(adj_ratio) * len(hrate) * len(trade_init_skip) * len(trade_end_skip)\ntrade_combos = len(valid_mpos_morder) * len(tv_ratio) * len(ofs_ratio) * len(fee_ratio) * len(entry_ratio) * len(adj_ratio) * len(hrate) * len(trade_init_skip) * len(trade_end_skip)\n\ncombos_per_date = len(series) * len(back_rank) * data_combos * trade_combos\ntotal_combos = combos_per_date * num_dates\n\nprint(f''Data param combos: {data_combos}'')\nprint(f''Valid (mpos, morder) pairs: {len(valid_mpos_morder)} out of {len(mpos) * len(morder)}'')\nprint(f''  mpos=3: morder <= 6, so {sum(1 for mo in morder if mo <= 6)} values'')\nprint(f''  mpos=5: morder <= 10, so {sum(1 for mo in morder if mo <= 10)} values'')\nprint(f''  mpos=10: morder <= 20, so {sum(1 for mo in morder if mo <= 20)} values'')\nprint(f''Trade param combos (after filtering): {trade_combos:,}'')\nprint(f''Trade param combos (before filtering): {trade_combos_unfiltered:,}'')\nprint(f''Combos per date: {combos_per_date:,}'')\nprint(f''Total combos (1 date): {total_combos:,}'')\nprint(f'''')\nprint(f''Breakdown: {num_dates} date × {len(series)} series × {len(back_rank)} back_ranks × {data_combos} data × {trade_combos} trade = {total_combos:,}'')\n\")",
+      "Read(//home/gary/cffex/s1_results/s1_grid_search/**)",
+      "Read(//home/gary/cffex/s1_results/**)",
+      "Bash(python3:*)",
+      "WebSearch",
+      "WebFetch(domain:medium.com)",
+      "WebFetch(domain:numba.discourse.group)",
+      "WebFetch(domain:stackoverflow.com)",
+      "WebFetch(domain:towardsdatascience.com)",
+      "WebFetch(domain:numba.readthedocs.io)",
+      "WebFetch(domain:github.com)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(NUMBA_CUDA_USE_NVIDIA_BINDING=0 uv run python:*)",
+      "Bash(time uv run:*)",
+      "Bash(timeout 60 uv run:*)",
+      "Bash(echo:*)",
+      "Bash(ulimit:*)",
+      "Bash(find:*)",
+      "WebFetch(domain:en.wikipedia.org)",
+      "WebFetch(domain:excamera.com)",
+      "WebFetch(domain:docs.rs)",
+      "WebFetch(domain:riptutorial.com)",
+      "WebFetch(domain:developer.nvidia.com)",
+      "WebFetch(domain:www.maxgcoding.com)",
+      "WebFetch(domain:bashtage.github.io)",
+      "WebFetch(domain:docs.nvidia.com)",
+      "WebFetch(domain:lemire.me)",
+      "WebFetch(domain:prng.di.unimi.it)",
+      "WebFetch(domain:arxiv.org)",
+      "WebFetch(domain:rosettacode.org)",
+      "WebFetch(domain:seanstuber.com)",
+      "Bash(tree:*)",
+      "Bash(cat:*)",
+      "Bash(ls:*)"
+    ],
+    "deny": [],
+    "ask": [],
+    "defaultMode": "bypassPermissions"
+  },
+  "model": "claude-opus-4-5-20251101",
+  "enableAllProjectMcpServers": true,
+  "alwaysThinkingEnabled": false,
+  "feedbackSurveyState": {
+    "lastShownTime": 1754210681990
+  },
+  "allowedTools": [
+    "Task",
+    "Bash",
+    "Glob",
+    "Grep",
+    "Read",
+    "Edit",
+    "Write",
+    "NotebookEdit",
+    "WebFetch",
+    "WebSearch",
+    "TodoWrite",
+    "AskUserQuestion",
+    "mcp__context7__resolve-library-id",
+    "mcp__context7__get-library-docs"
+  ],
+  "hooks": {
+    "PermissionRequest": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/home/gary/.claude/hooks/auto-allow-permissions.py"
+          }
+        ]
+      }
+    ]
+  }
+}
