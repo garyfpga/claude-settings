@@ -1,5 +1,12 @@
-## Using the Fixer Agent
+## Explore agent
+if you want to call the Explore agent, call the sonnet user agent, do not call the
+built-in explore agent.
 
+## general-purpose agents
+if you want to call the general-purpose agents, call the sonnet user agent, do not call the
+built-in general-purpose agents.
+
+## Using the Fixer Agent
 When tests fail and need fixing:
 1. Gather detailed information about the failure:
    - The exact error message and stack trace
