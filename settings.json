@@ -18,9 +18,5 @@
       }
     ]
   },
-  "alwaysThinkingEnabled": false,
-  "statusLine": {
-    "type": "command",
-    "command": "/home/gary/.claude/statusline-command.sh"
-  }
+  "alwaysThinkingEnabled": true
 }
