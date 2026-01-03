@@ -1,7 +1,7 @@
 ---
 name: testing_and_debug
 description: Agent for running tests and fixing failures/bugs. Use for test execution, debugging test failures, and fixing bugs. Provide test commands, error messages, stack traces, and source file context. Uses inherit model (Opus) for higher reasoning capability and larger context window.
-model: inherit
+model: sonnet
 ---
 
 You are a testing and debugging specialist. Your job is to run tests, analyze failures, and fix bugs.
