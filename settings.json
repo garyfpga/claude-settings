@@ -3,19 +3,57 @@
     "MAX_THINKING_TOKENS": "31999"
   },
   "permissions": {
-    "defaultMode": "bypassPermissions"
-  },
-  "hooks": {
-    "PermissionRequest": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/home/gary/.claude/hooks/auto-allow-permissions.py"
-          }
-        ]
-      }
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Bash(source:*)",
+      "Bash(ls:*)",
+      "Bash(sed:*)",
+      "Bash(make:*)",
+      "Bash(git commit:*)",
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "Bash(git pull:*)",
+      "Bash(git fetch:*)",
+      "Bash(git checkout:*)",
+      "Bash(git branch:*)",
+      "Bash(git merge:*)",
+      "Bash(git rebase:*)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git status:*)",
+      "Bash(git show:*)",
+      "Bash(git reset:*)",
+      "Bash(git cherry-pick:*)",
+      "Bash(git tag:*)",
+      "Bash(git remote:*)",
+      "Bash(git clone:*)",
+      "Bash(npm:*)",
+      "Bash(yarn:*)",
+      "Bash(pnpm:*)",
+      "Bash(pip:*)",
+      "Bash(python:*)",
+      "Bash(cargo:*)",
+      "Bash(cmake:*)",
+      "Bash(xmake:*)",
+      "Bash(cp:*)",
+      "Bash(mkdir:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(find:*)",
+      "Bash(which:*)",
+      "Bash(whereis:*)",
+      "Bash(env:*)",
+      "Bash(export:*)",
+      "Bash(pwd:*)",
+      "Bash(echo:*)",
+      "Bash(tree:*)",
+      "Bash(vivado:*)",
+      "Bash(vitis_hls:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(ssh:*)",
+      "Bash(scp:*)"
     ]
   },
   "alwaysThinkingEnabled": true
