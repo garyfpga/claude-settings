@@ -3,7 +3,7 @@
     "MAX_THINKING_TOKENS": "31999"
   },
   "permissions": {
-    "defaultMode": "bypassPermissions"
+    "defaultMode": "plan"
   },
   "hooks": {
     "PermissionRequest": [
@@ -18,6 +18,8 @@
       }
     ]
   },
-  "enabledPlugins": {},
+  "enabledPlugins": {
+    "context7@claude-plugins-official": true
+  },
   "alwaysThinkingEnabled": true
 }
