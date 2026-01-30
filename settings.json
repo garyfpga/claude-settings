@@ -5,19 +5,6 @@
   "permissions": {
     "defaultMode": "plan"
   },
-  "hooks": {
-    "PermissionRequest": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/home/gary/.claude/hooks/auto-allow-permissions.py"
-          }
-        ]
-      }
-    ]
-  },
   "enabledPlugins": {
     "context7@claude-plugins-official": true
   },
