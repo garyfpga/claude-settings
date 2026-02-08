@@ -1,12 +1,14 @@
 {
-  "env": {
-    "MAX_THINKING_TOKENS": "31999"
-  },
   "permissions": {
     "defaultMode": "bypassPermissions"
   },
   "enabledPlugins": {
-    "context7@claude-plugins-official": true
+    "context7@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "clangd-lsp@claude-plugins-official": true
   },
-  "alwaysThinkingEnabled": true
+  "thinking": {
+    "type": "adaptive"
+  },
+  "effortLevel": "high"
 }
