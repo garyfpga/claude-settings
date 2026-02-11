@@ -1,7 +1,7 @@
-## Initial Codebase Investigation
+## Explore agent
+In plan mode, or any other mode, if you need, you can spin up one or multiple Explore agents to figure out things, and it is not restricted to 3 parallel agents only, you can kick up as many as you want if that help.
 
-During the initial investigation phase of a task, **aggressively use Explore agents** (Task tool with subagent_type=Explore). They run on Haiku and are cheap — don't hold back.
+if you want to call the Explore agent, call the user agent, call the user agent instead of the built-in one
 
-- Launch multiple Explore agents **in parallel** to investigate different areas or questions simultaneously
-- Cast a wide net early: it's better to over-explore upfront than to miss context and backtrack later
-- Once you have a solid understanding, switch to targeted Glob/Grep for specific lookups during implementation
+if you want to call the general-purpose agent, call the user agent instead of the built-in one
+
