@@ -10,5 +10,6 @@
   "thinking": {
     "type": "adaptive"
   },
-  "CLAUDE_CODE_MAX_OUTPUT_TOKENS": 64000
+  "CLAUDE_CODE_MAX_OUTPUT_TOKENS": 32000,
+  "effortLevel": "medium"
 }
