@@ -1,21 +1,11 @@
 {
   "env": {
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-sonnet-4-5-20250929"
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-sonnet-4-5-20250929",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-5-20251101"
   },
   "permissions": {
     "defaultMode": "bypassPermissions"
   },
-  "enabledPlugins": {
-    "context7@claude-plugins-official": true,
-    "pyright-lsp@claude-plugins-official": true,
-    "clangd-lsp@claude-plugins-official": true
-  },
-  "skipDangerousModePermissionPrompt": true,
-  "thinking": {
-    "type": "adaptive"
-  },
-  "CLAUDE_CODE_MAX_OUTPUT_TOKENS": 32000,
-  "effortLevel": "medium",
   "hooks": {
     "PostToolUse": [
       {
@@ -29,5 +19,16 @@
         ]
       }
     ]
-  }
+  },
+  "enabledPlugins": {
+    "context7@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "clangd-lsp@claude-plugins-official": true
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "thinking": {
+    "type": "adaptive"
+  },
+  "CLAUDE_CODE_MAX_OUTPUT_TOKENS": 32000,
+  "effortLevel": "medium"
 }
