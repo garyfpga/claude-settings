@@ -24,6 +24,7 @@
     "pyright-lsp@claude-plugins-official": true,
     "clangd-lsp@claude-plugins-official": true
   },
+  "autoUpdatesChannel": "latest",
   "skipDangerousModePermissionPrompt": true,
   "thinking": {
     "type": "adaptive"
