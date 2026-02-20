@@ -1,10 +1,9 @@
 ---
 description: Answer a question about the codebase (read-only)
 argument-hint: <question>
-model: sonnet
 ---
 
-Use the Explore agent (medium thoroughness) to answer this question. Focus on providing a clear, comprehensive answer.
+Use the general-purpose agent to answer this question. Focus on providing a clear, comprehensive answer.
 
 Question: $ARGUMENTS
 
