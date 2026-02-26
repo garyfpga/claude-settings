@@ -11,4 +11,4 @@
 !hooks
 !hooks/**
 !settings.json
-!statusline-command.sh
+!statusline.sh
