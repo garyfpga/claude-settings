@@ -1,5 +1,5 @@
 ---
-name: ans-sonnet
+name: ans-opus
 description: Answer codebase questions using Sonnet model (read-only)
 model: opus
 ---
