@@ -3,7 +3,7 @@ description: Answer a question about the codebase (read-only)
 argument-hint: <question>
 ---
 
-Use the general-purpose agent to answer this question. Focus on providing a clear, comprehensive answer.
+Use the ans-opus agent to answer this question. Focus on providing a clear, comprehensive answer.
 
 Question: $ARGUMENTS
 
