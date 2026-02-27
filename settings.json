@@ -22,6 +22,10 @@
       }
     ]
   },
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline.sh"
+  },
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
@@ -32,9 +36,5 @@
   "thinking": {
     "type": "adaptive"
   },
-  "CLAUDE_CODE_MAX_OUTPUT_TOKENS": 48000,
-  "statusLine": {
-    "type": "command",
-    "command": "bash ~/.claude/statusline.sh"
-  }
+  "CLAUDE_CODE_MAX_OUTPUT_TOKENS": 48000
 }
