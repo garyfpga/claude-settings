@@ -299,6 +299,35 @@ format_reset_time() {
     echo "$result"
 }
 
+# Calculate time remaining until a future ISO timestamp
+# Usage: time_until <iso_string> <style: hm|dh>
+time_until() {
+    local iso_str="$1"
+    local style="$2"
+    [ -z "$iso_str" ] || [ "$iso_str" = "null" ] && return
+
+    local epoch
+    epoch=$(iso_to_epoch "$iso_str")
+    [ -z "$epoch" ] && return
+
+    local now=$(date +%s)
+    local diff=$(( epoch - now ))
+    [ "$diff" -le 0 ] && diff=0
+
+    case "$style" in
+        hm)
+            local hours=$(( diff / 3600 ))
+            local mins=$(( (diff % 3600) / 60 ))
+            printf "%dh %dm" "$hours" "$mins"
+            ;;
+        dh)
+            local days=$(( diff / 86400 ))
+            local hours=$(( (diff % 86400) / 3600 ))
+            printf "%dd %dh" "$days" "$hours"
+            ;;
+    esac
+}
+
 sep=" ${dim}|${reset} "
 
 if [ -n "$usage_data" ] && echo "$usage_data" | jq -e . >/dev/null 2>&1; then
@@ -307,7 +336,7 @@ if [ -n "$usage_data" ] && echo "$usage_data" | jq -e . >/dev/null 2>&1; then
     # ---- 5-hour (current) ----
     five_hour_pct=$(echo "$usage_data" | jq -r '.five_hour.utilization // 0' | awk '{printf "%.0f", $1}')
     five_hour_reset_iso=$(echo "$usage_data" | jq -r '.five_hour.resets_at // empty')
-    five_hour_reset=$(format_reset_time "$five_hour_reset_iso" "time")
+    five_hour_reset=$(time_until "$five_hour_reset_iso" "hm")
     five_hour_bar=$(build_bar "$five_hour_pct" "$bar_width")
 
     out+="${sep}${white}5h${reset} ${five_hour_bar} ${cyan}${five_hour_pct}%${reset}"
@@ -316,7 +345,7 @@ if [ -n "$usage_data" ] && echo "$usage_data" | jq -e . >/dev/null 2>&1; then
     # ---- 7-day (weekly) ----
     seven_day_pct=$(echo "$usage_data" | jq -r '.seven_day.utilization // 0' | awk '{printf "%.0f", $1}')
     seven_day_reset_iso=$(echo "$usage_data" | jq -r '.seven_day.resets_at // empty')
-    seven_day_reset=$(format_reset_time "$seven_day_reset_iso" "datetime")
+    seven_day_reset=$(time_until "$seven_day_reset_iso" "dh")
     seven_day_bar=$(build_bar "$seven_day_pct" "$bar_width")
 
     out+="${sep}${white}7d${reset} ${seven_day_bar} ${cyan}${seven_day_pct}%${reset}"
