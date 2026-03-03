@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 
-# Single line: Model | tokens | %used | %remain | think | 5h bar @reset | 7d bar @reset | extra
+# Single line: Model | dir@branch | tokens | %used | remain | ac | th | 5h bar | 7d bar | extra
+#
+# Auto compact simplified formula:
+#   current_tokens = input_tokens + cache_creation_input_tokens + cache_read_input_tokens
+#   If auto compact ON:  usable = context_window_size - 33000 (33k reserved buffer)
+#   If auto compact OFF: usable = context_window_size (full window)
+#   tokens_remaining = usable - current_tokens
+#   Auto compact on/off: ~/.claude.json "autoCompactEnabled" (default: true if absent)
+#   Can also be disabled via DISABLE_AUTO_COMPACT=true env var
 
 set -f  # disable globbing
 
@@ -86,10 +94,7 @@ if [ "$size" -gt 0 ]; then
 else
     pct_used=0
 fi
-pct_remain=$(( 100 - pct_used ))
-
 used_comma=$(format_commas $current)
-remain_comma=$(format_commas $(( size - current )))
 
 # ===== Build single-line output =====
 out=""
@@ -121,12 +126,38 @@ if [ -f "$settings_path" ]; then
     fi
 fi
 
+# Detect auto compact status
+auto_compact="on"
+claude_json="$HOME/.claude.json"
+if [ -f "$claude_json" ]; then
+    ac_val=$(jq -r '.autoCompactEnabled // true' "$claude_json" 2>/dev/null)
+    [ "$ac_val" = "false" ] && auto_compact="off"
+fi
+[ "${DISABLE_AUTO_COMPACT}" = "true" ] && auto_compact="off"
+
+# Calculate tokens remaining (until auto compact trigger, or context exhaustion)
+if [ "$auto_compact" = "on" ]; then
+    usable=$(( size - 33000 ))
+else
+    usable=$size
+fi
+remain_tokens=$(( usable - current ))
+[ "$remain_tokens" -lt 0 ] && remain_tokens=0
+remain_display=$(format_tokens $remain_tokens)
+
 out+=" ${dim}|${reset} "
-out+="${cyan}${pct_remain}%${reset} ${dim}remain${reset}"
+out+="${cyan}${remain_display}${reset} ${dim}remain${reset}"
 out+=" ${dim}|${reset} "
-out+="think: "
+out+="ac: "
+if [ "$auto_compact" = "on" ]; then
+    out+="${green}on${reset}"
+else
+    out+="${dim}off${reset}"
+fi
+out+=" ${dim}|${reset} "
+out+="th: "
 case "$thinking_mode" in
-    adaptive) out+="${orange}adaptive${reset}" ;;
+    adaptive) out+="${orange}ad${reset}" ;;
     enabled)  out+="${green}on${reset}" ;;
     *)        out+="${dim}off${reset}" ;;
 esac
