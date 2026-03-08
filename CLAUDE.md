@@ -25,7 +25,14 @@ Use when hitting unexpected bugs, test failures, or runtime errors.
 ## Output size limit
 Your max output token is set to 48k. When producing large outputs (e.g., writing or editing a large file, generating lengthy code), do NOT attempt to fit everything into a single response. Instead, break the work into multiple turns — write one section, then continue in the next turn. This avoids truncation and ensures all content is delivered completely. Prefer using the Edit tool for targeted changes over rewriting entire files.
 
+## Linting errors
+- Do NOT check `<new-diagnostics>` after every individual edit — they are often stale (from the pre-edit language server state)
+- Instead, batch your edits first, then verify once at the end of a batch of related edits
+- To verify, run `uv run pyright path/to/file.py` which gives fresh, accurate results
+- Fix any type errors before moving on to the next task
+
 ## Codex MCP
 - A Codex MCP tool (`mcp__codex__codex`) is available for invoking OpenAI Codex CLI
 - Do NOT use it unless the user explicitly asks you to
+- Always use `sandbox="danger-full-access"` — the default `"read-only"` sandbox restricts file reads to the working directory, preventing codex from reading files outside the repo (e.g. `~/.claude/plans/`)
 
