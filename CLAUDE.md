@@ -28,8 +28,9 @@ Your max output token is set to 48k. When producing large outputs (e.g., writing
 ## Linting errors
 - Do NOT check `<new-diagnostics>` after every individual edit — they are often stale (from the pre-edit language server state)
 - Instead, batch your edits first, then verify once at the end of a batch of related edits
-- To verify, run `uv run pyright path/to/file.py` which gives fresh, accurate results
-- Fix any type errors before moving on to the next task
+- **Python**: Run `uv run pyright path/to/file.py` for fresh, accurate type checking
+- **C++**: clangd shows many false errors (missing includes, unknown members) because it can't resolve include paths. Ignore clangd `<new-diagnostics>` entirely — verify with `xmake b <target>` instead
+- Fix any type/build errors before moving on to the next task
 
 ## Codex MCP
 - A Codex MCP tool (`mcp__codex__codex`) is available for invoking OpenAI Codex CLI
