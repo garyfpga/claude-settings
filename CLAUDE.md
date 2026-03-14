@@ -40,4 +40,3 @@ Your max output token is set to 48k. When producing large outputs (e.g., writing
 - For low-effort/fast responses, use `profile="low"` — this sets `model_reasoning_effort="low"` via `~/.codex/config.toml` profile
 - Profiles are defined in `~/.codex/config.toml` under `[profiles.<name>]` and map to `ConfigProfile` fields (model, model_reasoning_effort, sandbox_mode, etc.)
 - Codex subagents use `config_file` (a separate .toml) for per-agent settings — not profiles directly
-
