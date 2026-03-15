@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Single line: Model | dir@branch | tokens | %used | remain | ac | th | 5h bar | 7d bar | extra
+# Single line: Model | dir@branch | tokens | %used | ac | th | 5h bar | 7d bar | extra
 #
 # Auto compact simplified formula:
 #   current_tokens = input_tokens + cache_creation_input_tokens + cache_read_input_tokens
@@ -47,34 +47,26 @@ format_commas() {
     printf "%'d" "$1"
 }
 
-# Build a colored progress bar
-# Usage: build_bar <pct> <width>
-build_bar() {
+# Return color based on usage percentage
+# Usage: pct_color <pct>
+pct_color() {
     local pct=$1
-    local width=$2
     [ "$pct" -lt 0 ] 2>/dev/null && pct=0
-    [ "$pct" -gt 100 ] 2>/dev/null && pct=100
-
-    local filled=$(( pct * width / 100 ))
-    local empty=$(( width - filled ))
-
-    # Color based on usage level
-    local bar_color
-    if [ "$pct" -ge 90 ]; then bar_color="$red"
-    elif [ "$pct" -ge 70 ]; then bar_color="$yellow"
-    elif [ "$pct" -ge 50 ]; then bar_color="$orange"
-    else bar_color="$green"
+    if [ "$pct" -ge 90 ]; then printf "$red"
+    elif [ "$pct" -ge 70 ]; then printf "$yellow"
+    elif [ "$pct" -ge 50 ]; then printf "$orange"
+    else printf "$green"
     fi
-
-    local filled_str="" empty_str=""
-    for ((i=0; i<filled; i++)); do filled_str+="●"; done
-    for ((i=0; i<empty; i++)); do empty_str+="○"; done
-
-    printf "${bar_color}${filled_str}${dim}${empty_str}${reset}"
 }
 
 # ===== Extract data from JSON =====
 model_name=$(echo "$input" | jq -r '.model.display_name // "Claude"')
+# Shorten model name: "Claude Opus 4.6 (1M context)" → "op 4.6"
+model_name=$(echo "$model_name" | sed -E '
+    s/^Claude //i;
+    s/Opus/op/i; s/Sonnet/sn/i; s/Haiku/hk/i;
+    s/ *\(.*//;
+' | tr '[:upper:]' '[:lower:]')
 
 # Context window
 size=$(echo "$input" | jq -r '.context_window.context_window_size // 200000')
@@ -114,8 +106,6 @@ fi
 
 out+=" ${dim}|${reset} "
 out+="${orange}${used_tokens}/${total_tokens}${reset}"
-out+=" ${dim}|${reset} "
-out+="${green}${pct_used}%${reset} ${dim}used${reset}"
 # Check thinking mode from settings
 thinking_mode="off"
 settings_path="$HOME/.claude/settings.json"
@@ -135,27 +125,14 @@ if [ -f "$claude_json" ]; then
 fi
 [ "${DISABLE_AUTO_COMPACT}" = "true" ] && auto_compact="off"
 
-# Calculate tokens remaining (until auto compact trigger, or context exhaustion)
-if [ "$auto_compact" = "on" ]; then
-    usable=$(( size - 33000 ))
-else
-    usable=$size
-fi
-remain_tokens=$(( usable - current ))
-[ "$remain_tokens" -lt 0 ] && remain_tokens=0
-remain_display=$(format_tokens $remain_tokens)
+out+=" ${dim}|${reset} "
 
-out+=" ${dim}|${reset} "
-out+="${cyan}${remain_display}${reset} ${dim}remain${reset}"
-out+=" ${dim}|${reset} "
-out+="ac: "
 if [ "$auto_compact" = "on" ]; then
     out+="${green}on${reset}"
 else
     out+="${dim}off${reset}"
 fi
 out+=" ${dim}|${reset} "
-out+="th: "
 case "$thinking_mode" in
     adaptive) out+="${orange}ad${reset}" ;;
     enabled)  out+="${green}on${reset}" ;;
@@ -349,12 +326,12 @@ time_until() {
         hm)
             local hours=$(( diff / 3600 ))
             local mins=$(( (diff % 3600) / 60 ))
-            printf "%dh %dm" "$hours" "$mins"
+            printf "%dh%dm" "$hours" "$mins"
             ;;
         dh)
             local days=$(( diff / 86400 ))
             local hours=$(( (diff % 86400) / 3600 ))
-            printf "%dd %dh" "$days" "$hours"
+            printf "%dd%dh" "$days" "$hours"
             ;;
     esac
 }
@@ -362,25 +339,23 @@ time_until() {
 sep=" ${dim}|${reset} "
 
 if [ -n "$usage_data" ] && echo "$usage_data" | jq -e . >/dev/null 2>&1; then
-    bar_width=6
-
     # ---- 5-hour (current) ----
     five_hour_pct=$(echo "$usage_data" | jq -r '.five_hour.utilization // 0' | awk '{printf "%.0f", $1}')
     five_hour_reset_iso=$(echo "$usage_data" | jq -r '.five_hour.resets_at // empty')
     five_hour_reset=$(time_until "$five_hour_reset_iso" "hm")
-    five_hour_bar=$(build_bar "$five_hour_pct" "$bar_width")
+    five_hour_color=$(pct_color "$five_hour_pct")
 
-    out+="${sep}${white}5h${reset} ${five_hour_bar} ${cyan}${five_hour_pct}%${reset}"
-    [ -n "$five_hour_reset" ] && out+=" ${dim}@${five_hour_reset}${reset}"
+    out+="${sep}${white}5h${reset} ${five_hour_color}${five_hour_pct}%${reset}"
+    [ -n "$five_hour_reset" ] && out+=" ${dim}${five_hour_reset}${reset}"
 
     # ---- 7-day (weekly) ----
     seven_day_pct=$(echo "$usage_data" | jq -r '.seven_day.utilization // 0' | awk '{printf "%.0f", $1}')
     seven_day_reset_iso=$(echo "$usage_data" | jq -r '.seven_day.resets_at // empty')
     seven_day_reset=$(time_until "$seven_day_reset_iso" "dh")
-    seven_day_bar=$(build_bar "$seven_day_pct" "$bar_width")
+    seven_day_color=$(pct_color "$seven_day_pct")
 
-    out+="${sep}${white}7d${reset} ${seven_day_bar} ${cyan}${seven_day_pct}%${reset}"
-    [ -n "$seven_day_reset" ] && out+=" ${dim}@${seven_day_reset}${reset}"
+    out+="${sep}${white}7d${reset} ${seven_day_color}${seven_day_pct}%${reset}"
+    [ -n "$seven_day_reset" ] && out+=" ${dim}${seven_day_reset}${reset}"
 
     # ---- Extra usage ----
     extra_enabled=$(echo "$usage_data" | jq -r '.extra_usage.is_enabled // false')
@@ -388,9 +363,9 @@ if [ -n "$usage_data" ] && echo "$usage_data" | jq -e . >/dev/null 2>&1; then
         extra_pct=$(echo "$usage_data" | jq -r '.extra_usage.utilization // 0' | awk '{printf "%.0f", $1}')
         extra_used=$(echo "$usage_data" | jq -r '.extra_usage.used_credits // 0' | awk '{printf "%.2f", $1/100}')
         extra_limit=$(echo "$usage_data" | jq -r '.extra_usage.monthly_limit // 0' | awk '{printf "%.2f", $1/100}')
-        extra_bar=$(build_bar "$extra_pct" "$bar_width")
+        extra_color=$(pct_color "$extra_pct")
 
-        out+="${sep}${white}extra${reset} ${extra_bar} ${cyan}\$${extra_used}/\$${extra_limit}${reset}"
+        out+="${sep}${white}extra${reset} ${extra_color}\$${extra_used}/\$${extra_limit}${reset}"
     fi
 fi
 
