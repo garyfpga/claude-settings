@@ -191,40 +191,53 @@ get_oauth_token() {
 
 # ===== LINE 2 & 3: Usage limits with progress bars (cached) =====
 cache_file="/tmp/claude/statusline-usage-cache.json"
-cache_max_age=60  # seconds between API calls
+lock_file="/tmp/claude/statusline-usage.lock"
+cache_max_age=120  # seconds between API calls
 mkdir -p /tmp/claude
 
-needs_refresh=true
-usage_data=""
-
-# Check cache
-if [ -f "$cache_file" ]; then
-    cache_mtime=$(stat -c %Y "$cache_file" 2>/dev/null || stat -f %m "$cache_file" 2>/dev/null)
-    now=$(date +%s)
-    cache_age=$(( now - cache_mtime ))
-    if [ "$cache_age" -lt "$cache_max_age" ]; then
-        needs_refresh=false
-        usage_data=$(cat "$cache_file" 2>/dev/null)
-    fi
-fi
-
-# Fetch fresh data if cache is stale
-if $needs_refresh; then
-    token=$(get_oauth_token)
-    if [ -n "$token" ] && [ "$token" != "null" ]; then
-        response=$(curl -s --max-time 10 \
-            -H "Accept: application/json" \
-            -H "Content-Type: application/json" \
-            -H "Authorization: Bearer $token" \
-            -H "anthropic-beta: oauth-2025-04-20" \
-            -H "User-Agent: claude-code/2.1.34" \
-            "https://api.anthropic.com/api/oauth/usage" 2>/dev/null)
-        if [ -n "$response" ] && echo "$response" | jq -e '.five_hour' >/dev/null 2>&1; then
-            usage_data="$response"
-            echo "$response" > "$cache_file"
+# Helper: check if cache is fresh, sets usage_data if so
+check_cache() {
+    if [ -f "$cache_file" ]; then
+        local mtime now age
+        mtime=$(stat -c %Y "$cache_file" 2>/dev/null || stat -f %m "$cache_file" 2>/dev/null)
+        now=$(date +%s)
+        age=$(( now - mtime ))
+        if [ "$age" -lt "$cache_max_age" ]; then
+            usage_data=$(cat "$cache_file" 2>/dev/null)
+            return 0
         fi
     fi
-    # Fall back to stale cache
+    return 1
+}
+
+usage_data=""
+
+# Check cache before attempting any lock
+if ! check_cache; then
+    # Cache is stale — try to acquire exclusive lock (non-blocking)
+    exec 9>"$lock_file"
+    if flock -n 9 2>/dev/null; then
+        # Won the lock — re-check cache (another instance may have just refreshed it)
+        if ! check_cache; then
+            token=$(get_oauth_token)
+            if [ -n "$token" ] && [ "$token" != "null" ]; then
+                response=$(curl -s --max-time 10 \
+                    -H "Accept: application/json" \
+                    -H "Content-Type: application/json" \
+                    -H "Authorization: Bearer $token" \
+                    -H "anthropic-beta: oauth-2025-04-20" \
+                    -H "User-Agent: claude-code/2.1.34" \
+                    "https://api.anthropic.com/api/oauth/usage" 2>/dev/null)
+                if [ -n "$response" ] && echo "$response" | jq -e '.five_hour' >/dev/null 2>&1; then
+                    usage_data="$response"
+                    echo "$response" > "$cache_file"
+                fi
+            fi
+        fi
+        flock -u 9
+    fi
+    exec 9>&-
+    # Fall back to stale cache if we still have no data
     if [ -z "$usage_data" ] && [ -f "$cache_file" ]; then
         usage_data=$(cat "$cache_file" 2>/dev/null)
     fi
