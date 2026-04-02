@@ -1,16 +1,3 @@
-## Implementation and debugging with subagents
-
-### Coder agent (Sonnet 4.6) — `subagent_type="coder"`
-Use for all code implementation tasks: new features, refactoring, multi-file edits.
-- When a plan touches 3+ independent files, launch multiple coder agents in parallel
-- Each agent prompt MUST include:
-  - The full relevant section of the plan (not just a summary)
-  - Exact file path(s) to edit
-  - Specific code changes expected (function signatures, logic, imports)
-  - Relevant context from other files (types, interfaces, function signatures the code depends on)
-- The goal is that the agent has everything it needs to produce the exact code you would write yourself
-- Only parallelize truly independent edits — if file B depends on changes in file A, edit A first
-
 ### Debugger agent (Opus 4.6) — `subagent_type="debugger"`
 Use when hitting unexpected bugs, test failures, or runtime errors.
 - Launch when: tests fail unexpectedly, output is wrong, crashes occur, type errors appear
@@ -31,12 +18,3 @@ Your max output token is set to 48k. When producing large outputs (e.g., writing
 - **Python**: Run `uv run pyright path/to/file.py` for fresh, accurate type checking
 - **C++**: clangd shows many false errors (missing includes, unknown members) because it can't resolve include paths. Ignore clangd `<new-diagnostics>` entirely — verify with `xmake b <target>` instead
 - Fix any type/build errors before moving on to the next task
-
-## Codex MCP
-- A Codex MCP tool (`mcp__codex__codex`) is available for invoking OpenAI Codex CLI
-- Do NOT use it unless the user explicitly asks you to
-- Always use `sandbox="danger-full-access"` — the default `"read-only"` sandbox restricts file reads to the working directory, preventing codex from reading files outside the repo (e.g. `~/.claude/plans/`)
-- Always use `model="gpt-5.3-codex"` (default model for Codex calls)
-- For low-effort/fast responses, use `profile="low"` — this sets `model_reasoning_effort="low"` via `~/.codex/config.toml` profile
-- Profiles are defined in `~/.codex/config.toml` under `[profiles.<name>]` and map to `ConfigProfile` fields (model, model_reasoning_effort, sandbox_mode, etc.)
-- Codex subagents use `config_file` (a separate .toml) for per-agent settings — not profiles directly
