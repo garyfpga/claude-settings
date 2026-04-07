@@ -32,6 +32,9 @@ Your max output token is set to 48k. When producing large outputs (e.g., writing
 - **C++**: clangd shows many false errors (missing includes, unknown members) because it can't resolve include paths. Ignore clangd `<new-diagnostics>` entirely — verify with `xmake b <target>` instead
 - Fix any type/build errors before moving on to the next task
 
+## Web Search
+When searching for information from the web, kick both `WebSearch` (built-in) and the `web-search` MCP tools in parallel simultaneously — they use different backends and together improve coverage and reliability.
+
 ## Codex MCP
 - A Codex MCP tool (`mcp__codex__codex`) is available for invoking OpenAI Codex CLI
 - Do NOT use it unless the user explicitly asks you to
