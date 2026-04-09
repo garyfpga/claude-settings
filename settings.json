@@ -40,8 +40,7 @@
     "mode": "hold"
   },
   "skipDangerousModePermissionPrompt": true,
-  "thinking": {
-    "type": "adaptive"
-  },
+  "CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING": 1,
+  "MAX_THINKING_TOKENS": 128000,
   "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": true
 }
