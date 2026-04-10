@@ -22,8 +22,8 @@ Use when hitting unexpected bugs, test failures, or runtime errors.
 - The debugger will: reproduce → isolate → diagnose root cause → fix → verify
 - Do NOT use the debugger for planned implementation work — use coder instead
 
-## Output size limit
-Your max output token is set to 48k. When producing large outputs (e.g., writing or editing a large file, generating lengthy code), do NOT attempt to fit everything into a single response. Instead, break the work into multiple turns — write one section, then continue in the next turn. This avoids truncation and ensures all content is delivered completely. Prefer using the Edit tool for targeted changes over rewriting entire files.
+## Tables in comments
+ASCII tables in code comments must be readable in the raw file. In C++, wrap with `// clang-format off` / `// clang-format on` to prevent reformatting.
 
 ## Linting errors
 - Do NOT check `<new-diagnostics>` after every individual edit — they are often stale (from the pre-edit language server state)
@@ -35,11 +35,3 @@ Your max output token is set to 48k. When producing large outputs (e.g., writing
 ## Web Search
 When searching for information from the web, kick both `WebSearch` (built-in) and the `web-search` MCP tools in parallel simultaneously — they use different backends and together improve coverage and reliability.
 
-## Codex MCP
-- A Codex MCP tool (`mcp__codex__codex`) is available for invoking OpenAI Codex CLI
-- Do NOT use it unless the user explicitly asks you to
-- Always use `sandbox="danger-full-access"` — the default `"read-only"` sandbox restricts file reads to the working directory, preventing codex from reading files outside the repo (e.g. `~/.claude/plans/`)
-- Always use `model="gpt-5.3-codex"` (default model for Codex calls)
-- For low-effort/fast responses, use `profile="low"` — this sets `model_reasoning_effort="low"` via `~/.codex/config.toml` profile
-- Profiles are defined in `~/.codex/config.toml` under `[profiles.<name>]` and map to `ConfigProfile` fields (model, model_reasoning_effort, sandbox_mode, etc.)
-- Codex subagents use `config_file` (a separate .toml) for per-agent settings — not profiles directly
