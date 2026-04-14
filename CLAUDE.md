@@ -1,4 +1,4 @@
-## Implementation and debugging with subagents
+## Never invoke builtin plan mode.
 
 ## Tables in comments
 ASCII tables in code comments must be readable in the raw file. In C++, wrap with `// clang-format off` / `// clang-format on` to prevent reformatting.
@@ -12,4 +12,9 @@ ASCII tables in code comments must be readable in the raw file. In C++, wrap wit
 
 ## Web Search
 When searching for information from the web, kick both `WebSearch` (built-in) and the `web-search` MCP tools in parallel simultaneously — they use different backends and together improve coverage and reliability.
+
+## Polars write_parquet
+- Always use `use_pyarrow=True` in all `.write_parquet()` calls
+- Polars 1.31.0 native parquet writer has a bug that corrupts FixedSizeList/Array columns when multiple `write_parquet()` calls happen sequentially in the same process (buffer reuse in repetition-level encoding)
+- PyArrow writer is ~2.5x slower but correct; write time is negligible vs computation
 
