@@ -190,10 +190,17 @@ get_oauth_token() {
 }
 
 # ===== LINE 2 & 3: Usage limits with progress bars (cached) =====
-cache_file="/tmp/claude/statusline-usage-cache.json"
-lock_file="/tmp/claude/statusline-usage.lock"
+# Shared cache across all users on the same subscription:
+#   /tmp/claude-shared/ gets sticky + world-writable (1777) so any user can
+#   create files; umask 000 here makes cache + lock files mode 666 so any
+#   user can overwrite them (race-safe via flock).
+cache_dir="/tmp/claude-shared"
+cache_file="$cache_dir/statusline-usage-cache.json"
+lock_file="$cache_dir/statusline-usage.lock"
 cache_max_age=120  # seconds between API calls
-mkdir -p /tmp/claude
+umask 000
+mkdir -p "$cache_dir" 2>/dev/null
+chmod 1777 "$cache_dir" 2>/dev/null || true
 
 # Helper: check if cache is fresh, sets usage_data if so
 check_cache() {

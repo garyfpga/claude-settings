@@ -32,17 +32,17 @@
     "clangd-lsp@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true
   },
-  "effortLevel": "high",
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "max",
   "autoUpdatesChannel": "latest",
-  "voiceEnabled": true,
   "voice": {
     "enabled": true,
     "mode": "hold"
   },
+  "showThinkingSummaries": true,
   "skipDangerousModePermissionPrompt": true,
+  "voiceEnabled": true,
   "CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING": 1,
   "MAX_THINKING_TOKENS": 128000,
-  "alwaysThinkingEnabled": true,
-  "showThinkingSummaries": true,
   "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": true
 }
