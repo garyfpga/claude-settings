@@ -6,7 +6,7 @@
     "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1"
   },
   "permissions": {
-    "defaultMode": "bypassPermissions"
+    "defaultMode": "auto"
   },
   "hooks": {
     "PostToolUse": [
@@ -33,7 +33,6 @@
     "superpowers@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "max",
   "autoUpdatesChannel": "latest",
   "voice": {
     "enabled": true,
@@ -44,5 +43,6 @@
   "voiceEnabled": true,
   "CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING": 1,
   "MAX_THINKING_TOKENS": 128000,
-  "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": true
+  "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": true,
+  "skipAutoPermissionPrompt": true
 }
