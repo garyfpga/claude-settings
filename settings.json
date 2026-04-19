@@ -6,7 +6,7 @@
     "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1"
   },
   "permissions": {
-    "defaultMode": "auto"
+    "defaultMode": "bypassPermissions"
   },
   "hooks": {
     "PostToolUse": [
@@ -41,8 +41,10 @@
   "showThinkingSummaries": true,
   "skipDangerousModePermissionPrompt": true,
   "voiceEnabled": true,
-  "CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING": 1,
-  "MAX_THINKING_TOKENS": 128000,
   "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "thinking": {
+    "type": "adaptive"
+  },
+  "effort": "xhigh"
 }
