@@ -87,3 +87,5 @@ When searching for information from the web, kick both `WebSearch` (built-in) an
 - Polars 1.31.0 native parquet writer has a bug that corrupts FixedSizeList/Array columns when multiple `write_parquet()` calls happen sequentially in the same process (buffer reuse in repetition-level encoding)
 - PyArrow writer is ~2.5x slower but correct; write time is negligible vs computation
 
+## AskUserQuestion
+Whenever you use AskUserQuestion, lay down the pros and cons and suggest a default and tell user why
