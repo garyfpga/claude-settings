@@ -33,6 +33,7 @@
     "superpowers@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
+  "effortLevel": "max",
   "autoUpdatesChannel": "latest",
   "voice": {
     "enabled": true,
@@ -41,10 +42,7 @@
   "showThinkingSummaries": true,
   "skipDangerousModePermissionPrompt": true,
   "voiceEnabled": true,
-  "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": true,
-  "skipAutoPermissionPrompt": true,
-  "thinking": {
-    "type": "adaptive"
-  },
-  "effort": "xhigh"
+  "CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING": 1,
+  "MAX_THINKING_TOKENS": 128000,
+  "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": true
 }
