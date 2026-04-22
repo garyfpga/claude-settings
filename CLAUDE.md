@@ -89,3 +89,6 @@ When searching for information from the web, kick both `WebSearch` (built-in) an
 
 ## AskUserQuestion
 Whenever you use AskUserQuestion, lay down the pros and cons and suggest a default and tell user why
+
+## Haiku
+Never use Haiku in review / impl / analysis task
