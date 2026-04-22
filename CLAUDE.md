@@ -1,5 +1,7 @@
 # CLAUDE.md
 
+## Always launch subagent in background such that Claude will be able to response to new prompt
+
 Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
 
 **Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
@@ -92,3 +94,6 @@ Whenever you use AskUserQuestion, lay down the pros and cons and suggest a defau
 
 ## Haiku
 Never use Haiku in review / impl / analysis task
+
+## Superpower impl
+in the impl pharse of superpower opt for subagents (launch in background), and try to parallelize if possible, and interleave review and fix and impl
