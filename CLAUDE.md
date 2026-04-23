@@ -92,8 +92,10 @@ When searching for information from the web, kick both `WebSearch` (built-in) an
 ## AskUserQuestion
 Whenever you use AskUserQuestion, lay down the pros and cons and suggest a default and tell user why
 
-## Haiku
-Never use Haiku in review / impl / analysis task
-
 ## Superpower impl
-in the impl pharse of superpower opt for subagents (launch in background), and try to parallelize if possible, and interleave review and fix and impl
+0. Keep the test in the spec and plan just enough to cover new feature, and keep the design minimal
+1. in the impl pharse, checkout the DAG of tasks and launch each (impl -> spec review -> code quality review) in background agent in parallel and in interleave
+2. For the impl task, if that is just text edit / insertion, use Haiku model
+3. For the review task, use sonnet
+4. If there are problem to fix, the main agaent should design and dispatch Haiku impl / sonnet review again
+
