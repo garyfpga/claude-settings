@@ -1,9 +1,6 @@
 # CLAUDE.md
 
-## Subagent and plan mode
-1. always launch subagent in background at any time such that Claude will be able to response to new prompt
-2. in plan mode, if the task is not trivial, ask the user if he wanna use subagent,
-if he say yes, plan for using subagent for the impl in parallel.
+## Always launch subagent in background such that Claude will be able to response to new prompt
 
 Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
 
@@ -98,3 +95,5 @@ Whenever you use AskUserQuestion, lay down the pros and cons and suggest a defau
 ## Haiku
 Never use Haiku in review / impl / analysis task
 
+## Superpower impl
+in the impl pharse of superpower opt for subagents (launch in background), and try to parallelize if possible, and interleave review and fix and impl
