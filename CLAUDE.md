@@ -95,8 +95,8 @@ Whenever you use AskUserQuestion, lay down the pros and cons and suggest a defau
 ## Superpower
 0. Always launch agents in background
 1. Keep the test in the spec and plan just enough to cover new feature, and keep the design minimal
-2. in the impl pharse, checkout the DAG of tasks and launch each (impl -> spec review -> code quality review) in background agent in parallel and in interleave
-3. for tasks that have no dependency, launch them in parallel
+2. in the impl pharse, checkout the DAG and launch tasks in parallel
+3. always launch spec reviewer and code quality review in the backgrouund at the same time
 4. For the impl task, if that is just text edit / insertion, use Haiku model
 5. For the review task, use sonnet
 6. If there are problem to fix, just use the main agent to fix it. And no need to go thru review again
