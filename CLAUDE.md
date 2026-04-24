@@ -60,16 +60,14 @@ For multi-step tasks, state a brief plan:
 3. [Step] → verify: [check]
 ```
 
-## 5. Local tests
-- Don't rerun tests that is not related to your change unless asked.
+## 5. Subagent implementation
 
-Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
-
----
-
-**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
-
-## Never invoke builtin plan mode.
+1. in planning mode, always analysis the DAG for the work, and plan for dispatching multiple agent in background in parallel.
+2. when a subagent complete, check the task list and the DAG if we can dispatching more task
+3. for simple tasks where the changes is already state in plan, use haiku
+4. for complex tasks use sonnet
+5. if subagents hit unexpected results / error, just fix it in the main agent
+6. all testing has to be run with a proper timeout value, total estimated test time for a PR should not exceeds 15 minutes
 
 ## Tables in comments
 ASCII tables in code comments must be readable in the raw file. In C++, wrap with `// clang-format off` / `// clang-format on` to prevent reformatting.
@@ -91,13 +89,4 @@ When searching for information from the web, kick both `WebSearch` (built-in) an
 
 ## AskUserQuestion
 Whenever you use AskUserQuestion, lay down the pros and cons and suggest a default and tell user why
-
-## Superpower
-0. Always launch agents in background
-1. Keep the test in the spec and plan just enough to cover new feature, and keep the design minimal
-2. in the impl pharse, checkout the DAG of tasks and launch each (impl -> spec review -> code quality review) in background agent in parallel and in interleave
-3. for tasks that have no dependency, launch them in parallel
-4. For the impl task, if that is just text edit / insertion, use Haiku model
-5. For the review task, use sonnet
-6. If there are problem to fix, just use the main agent to fix it. And no need to go thru review again
 
