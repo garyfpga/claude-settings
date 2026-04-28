@@ -64,10 +64,10 @@ For multi-step tasks, state a brief plan:
 
 1. in planning mode, always analysis the DAG for the work, and plan for dispatching multiple agent in background in parallel.
 2. when a subagent complete, check the task list and the DAG if we can dispatching more task
-3. for simple tasks where the changes is already state in plan, use haiku
-4. for complex tasks use sonnet
-5. if subagents hit unexpected results / error, just fix it in the main agent
-6. all testing has to be run with a proper timeout value, total estimated test time for a PR should not exceeds 15 minutes
+3. for simple tasks where the code changes is already state in plan, use haiku
+4. for complex tasks use sonnet, including tasks that requiring running the tests, do not run tests in the main agent
+5. all testing has to be run with a proper timeout value, total estimated test time for a PR should not exceeds 15 minutes
+6. if subagents hit unexpected results / error, just fix it in the main agent
 
 ## Tables in comments
 ASCII tables in code comments must be readable in the raw file. In C++, wrap with `// clang-format off` / `// clang-format on` to prevent reformatting.
