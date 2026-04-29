@@ -31,7 +31,7 @@
     "context7@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
     "clangd-lsp@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true
+    "superpowers@claude-plugins-official": false
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
@@ -42,6 +42,7 @@
   },
   "showThinkingSummaries": true,
   "skipDangerousModePermissionPrompt": true,
+  "agentPushNotifEnabled": true,
   "voiceEnabled": true,
   "CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING": 1,
   "MAX_THINKING_TOKENS": 128000,
